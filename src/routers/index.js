@@ -1,7 +1,7 @@
-const userRouter = require("./userRouter");
+import userRouter from "./userRouter";
 
 function route(app) {
   app.use("/user", userRouter);
 }
 
-module.exports = route;
+export default route;

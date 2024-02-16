@@ -1,24 +1,47 @@
-const express = require("express");
+import express from "express";
+import sequelize from "./src/config/db.js";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
-const port = 3000;
 
-// Connect to database
-const sequelize = require("./src/config/db");
-
-// Test database connection
-(async () => {
+const startServer = async () => {
   try {
+    // await db.sequelize.sync({alter: process.env.DB_ALTER !== 'false'});
     await sequelize.authenticate();
-    console.log("Connection DATABASE successfully.");
+    console.log("✅ Database connected!");
+    await sequelize.sync({ alter: process.env.DB_ALTER !== "false" });
+    console.log("✅ Database sync!");
+    app.get("/user", (req, res) => {
+      res.send("Hello World!");
+    });
+    const port = process.env.PORT || 3000;
+    app.listen(port, async () => {
+      console.log(`
+🚀 Server ready at: http://localhost:${port}`);
+    });
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error(error);
+    throw error;
   }
-})();
+};
 
-app.get("/user", (req, res) => {
-  res.send("Hello World!");
-});
+startServer();
+// Connect to database
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// // Test database connection
+// (async () => {
+//   try {
+//     await sequelize.authenticate();
+//     console.log("Connection DATABASE successfully.");
+//   } catch (error) {
+//     console.error("Unable to connect to the database:", error);
+//   }
+// })();
+
+// app.get("/user", (req, res) => {
+//   res.send("Hello World!");
+// });
+
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });

@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { define } from "../config/db";
+import { define } from "../config/db.js";
 
 const User = define(
   "User",
