@@ -14,37 +14,97 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(require("./routes/index.js"));
 
 app.get("/api/user", async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
+  try {
+    const { page, sort, search } = req.query;
+    const limit = 5;
+    const offset = 10;
+
+    // Tùy chỉnh truy vấn dựa trên các tham số được truyền vào từ client
+    const options = {
+      order: [],
+      where: {},
+      limit,
+      offset,
+    };
+
+    // Xử lý phần sắp xếp
+    if (sort) {
+      const [field, order] = sort.split(":");
+      options.order.push([field, order]);
+    }
+
+    // Xử lý phần tìm kiếm
+    if (search) {
+      options.where = {
+        [Op.or]: [
+          { username: { [Op.like]: `%${search}%` } },
+          { email: { [Op.like]: `%${search}%` } },
+        ],
+      };
+    }
+    // Thực hiện truy vấn để lấy danh sách người dùng với các tùy chọn đã được đặt
+    const users = await User.findAll(options);
+    res.json(users);
+  } catch (error) {
+    console.log(error)
+    throw(error)
+  }
 });
 
 app.post("/api/user", async (req, res) => {
-  const post=  await User.create(
-      {
-        username: "alice2222",
-        email: "tewsst1sd234@gmail.com",
-      }
-    );
+  try {
+    const { username, email } = req.body;
+    console.log("req.body:", req.body);
+    const post = await User.create({
+      username,
+      email,
+    });
+
     res.json(post);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+  
 });
 
-// app.put("/api/user/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const put = await User.update(
-//     {
-//       username: "alice12356789 ",
-//       email: "tewsst1234@gmail.com",
-//     },
-//     { where: { id } }
-//   );
-//   res.json(put);
-// });
+app.put("/api/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { username, email } = req.body;
+    console.log("ID:", id);
+    console.log("req.body:", req.body);
+    if (username != null) {
+      const put = await User.update(
+        {
+          username,
+          email,
+        },
+        { where: { id } }
+      );
 
-// app.delete("/api/user/:id", async (req, res) => {
-//   const { id } = req.params;
-//   await User.destroy({ where: { id } });
-//    res.json(req.params);
-// });
+      res.json(put);
+    } else {
+      return res.json(404);
+    }
+  
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+  
+});
+
+app.delete("/api/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await User.destroy({ where: { id } });
+    res.json(req.params);
+  }catch (error) {
+    console.log(error)
+    throw(error)
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
