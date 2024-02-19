@@ -1,7 +1,7 @@
-import userRouter from "./userRouter";
+import userRouter from "./userRouter.js";
 
 function route(app) {
-  app.use("/user", userRouter);
+  app.use("/api/user", userRouter);
 }
 
 export default route;

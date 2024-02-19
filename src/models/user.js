@@ -1,14 +1,9 @@
-import { Sequelize } from "sequelize";
-import { define } from "../config/db.js";
+import { Sequelize, DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
-const User = define(
-  "User",
+const User = sequelize.define(
+  "Users",
   {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUID4,
-      primarykey: true,
-    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,6 +12,7 @@ const User = define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      isEmail:true
     },
     createdAt: {
       allowNull: false,
@@ -31,7 +27,7 @@ const User = define(
   },
   {
     tableName: "User",
+    timestamps: false
   }
 );
-define.sync({ force: true });
 export default User;
