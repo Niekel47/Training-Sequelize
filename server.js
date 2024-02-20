@@ -3,16 +3,13 @@ import sequelize from "./src/config/db.js";
 import dotenv from "dotenv";
 import User from "./src/models/user.js";
 import bcrypt from "bcrypt";
-// import route from "./src/routers/index.js";
+import validator from "validator";
+
 dotenv.config();
 const app = express();
 
-// app.set("view engine", "ejs");
-// app.set("views", "/src/views");
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-// app.use(require("./routes/index.js"));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/api/user", async (req, res) => {
   try {
@@ -66,73 +63,57 @@ app.get("/api/user", async (req, res) => {
 });
 
 app.post("/api/user", async (req, res) => {
-  // try {
-  //   const { username, email } = req.body;
-  //   console.log("req.body:", req.body);
-  //   const post = await User.create({
-  //     username,
-  //     email,
-  //   });
+   try {
+     // Lấy thông tin từ yêu cầu của người dùng
+     const { username, email, password } = req.body;
+     // Kiểm tra xem người dùng đã cung cấp tên người dùng, email và mật khẩu chưa
+     if (!username || !email || !password) {
+       return res.status(400).json({
+           error:
+             "Vui lòng cung cấp đầy đủ thông tin tên người dùng, email và mật khẩu.",
+         });
+     }
+     if (!validator.isEmail(email)) {
+       return res.status(400).json({
+         error: "Vui lòng cung cấp địa chỉ email hợp lệ.",
+       });
+     }
 
-  //   res.json(post);
-  // } catch (error) {
-  //   console.error(error);
-  //   throw error;
-  // }
-  try {
-    // Tạo giá trị mặc định hoặc logic tạo ngẫu nhiên cho username và email
-    const defaultUsername = "user_" + Math.floor(Math.random() * 1000);
-    const defaultEmail = defaultUsername + "@gmail.com";
-    const defaultPassword = "123456"; 
-    const hashedPassword = await bcrypt.hashSync(defaultPassword, 10);
+     if (password.length < 6) {
+       return res.status(400).json({
+         error: "Mật khẩu phải có ít nhất 6 ký tự.",
+       });
+     }
 
-    // Tạo người dùng mới với các giá trị mặc định hoặc tạo ngẫu nhiên
-    const post = await User.create({
-      username: defaultUsername,
-      email: defaultEmail,
-      password: hashedPassword
-    });
+     // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
+     const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.json(post);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-  
+     // Tạo người dùng mới với thông tin từ người dùng
+     const post = await User.create({
+       username: username,
+       email: email,
+       password: hashedPassword,
+     });
+
+     res.json(post);
+   } catch (error) {
+     console.error(error);
+     throw error;
+   }
 });
 
 app.put("/api/user/:id", async (req, res) => {
-  // try {
-  //   const { id } = req.params;
-  //   const { username, email } = req.body;
-  //   console.log("ID:", id);
-  //   console.log("req.body:", req.body);
-  //   if (username != null) {
-  //     const put = await User.update(
-  //       {
-  //         username,
-  //         email,
-  //       },
-  //       { where: { id } }
-  //     );
-
-  //     res.json(put);
-  //   } else {
-  //     return res.json(404);
-  //   }
-  
-  // } catch (error) {
-  //   console.error(error);
-  //   throw error;
-  // }
   try {
     const { id } = req.params;
     const { username, email, password } = req.body;
-
+    if (password && password.length < 6) {
+      return res.status(400).json({
+        error: "Mật khẩu phải có ít nhất 6 ký tự.",
+      });
+    }
     if (password) {
       // Nếu có mật khẩu mới, hash lại mật khẩu trước khi lưu vào cơ sở dữ liệu
       const hashedPassword = await bcrypt.hash(password, 10);
-
       const put = await User.update(
         {
           username,

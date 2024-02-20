@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import validator from 'validator';
 
 const User = sequelize.define(
   "Users",
@@ -9,10 +10,20 @@ const User = sequelize.define(
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: {
+        msg: "Vui lòng nhập đúng định dạng email"
+      },
+      async customValidator(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error('Email không hợp lệ');
+        }
+      }
+    }
+  },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
