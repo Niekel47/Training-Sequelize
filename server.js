@@ -7,7 +7,6 @@ import validator from "validator";
 
 dotenv.config();
 const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -106,6 +105,12 @@ app.put("/api/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { username, email, password } = req.body;
+    const existingUser = await User.findByPk(id);
+    if (!existingUser) {
+      return res.status(404).json({
+        error: "Người dùng không tồn tại.",
+      });
+    }
     if (password && password.length < 6) {
       return res.status(400).json({
         error: "Mật khẩu phải có ít nhất 6 ký tự.",
@@ -145,9 +150,16 @@ app.put("/api/user/:id", async (req, res) => {
 
 app.delete("/api/user", async (req, res) => {
   try {
-    const { id } = req.params;
-    await User.destroy({ where: { id } });
-    res.json(req.params);
+    const existingUser = await User.findByPk(id);
+    if (!existingUser) {
+      return res.status(404).json({
+        error: "Người dùng không tồn tại.",
+      });
+    }else{
+      const { id } = req.params;
+      await User.destroy({ where: { id } });
+      res.json(req.params);
+    }
   }catch (error) {
     console.log(error)
     throw(error)
