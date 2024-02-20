@@ -5,29 +5,37 @@ import validator from 'validator';
 const User = sequelize.define(
   "Users",
   {
-    username: {
+    Hovaten: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: {
-        msg: "Vui lòng nhập đúng định dạng email"
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: {
+          msg: "Vui lòng nhập đúng định dạng email",
+        },
+        async customValidator(value) {
+          if (!validator.isEmail(value)) {
+            throw new Error("Email không hợp lệ");
+          }
+        },
       },
-      async customValidator(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Email không hợp lệ');
-        }
-      }
-    }
-  },
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    phone: {
+      type: DataTypes.STRING(12), 
+      allowNull: false,
+      validate: {
+        isNumeric: true,
+        len: [10, 11], // Số điện thoại phải có từ 10 đến 11 ký tự
+      },
     },
     createdAt: {
       allowNull: false,
