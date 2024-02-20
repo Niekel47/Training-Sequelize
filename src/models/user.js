@@ -1,11 +1,11 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import validator from 'validator';
+import validator from "validator";
 
 const User = sequelize.define(
   "Users",
   {
-    Hovaten: {
+    fullname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -30,7 +30,7 @@ const User = sequelize.define(
       unique: true,
     },
     phone: {
-      type: DataTypes.STRING(12), 
+      type: DataTypes.STRING(12),
       allowNull: false,
       validate: {
         isNumeric: true,
