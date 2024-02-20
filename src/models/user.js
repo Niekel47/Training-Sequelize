@@ -12,7 +12,11 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      isEmail:true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     createdAt: {
       allowNull: false,
@@ -27,7 +31,7 @@ const User = sequelize.define(
   },
   {
     tableName: "User",
-    timestamps: false
+    timestamps: false,
   }
 );
 export default User;
