@@ -1,9 +1,9 @@
 import express from "express";
 import sequelize from "./src/config/db.js";
-import dotenv from "dotenv";
+import { config } from "dotenv";
 import route from "./src/routers/index.js";
 
-dotenv.config();
+config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

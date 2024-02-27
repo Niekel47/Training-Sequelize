@@ -5,12 +5,16 @@ import {
   getAllUsers,
   updateUser,
   deleteUser,
-} from "../controllers/userController.js";
+  getUserById,
+  loginUser,
+} from "../controllers/UserController.js";
+
 
 router.get("/", getAllUsers);
-// router.get("/user/:id", getUserById);
+router.get("/:id", getUserById);
 router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
+router.post("/login", loginUser);
 
 export default router;
