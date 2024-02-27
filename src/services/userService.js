@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { genneralAccessToken } from "./JwtService.js";
+import { genneralAccessToken, genneralRefreshToken } from "./JwtService.js";
 const createuser = async (newUser) => {
   try {
     // Lấy thông tin từ yêu cầu của người dùng
@@ -31,7 +31,7 @@ const createuser = async (newUser) => {
     }
 
     // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 10);
 
     // Tạo người dùng mới với thông tin từ người dùng
     const post = await User.create({
@@ -47,46 +47,49 @@ const createuser = async (newUser) => {
   }
 };
 
-const loginuser = async (userLogin) => {
-  try {
+const loginuser = (userLogin) => {
+  return new Promise(async (resolve, reject) => {
     const { email, password } = userLogin;
-    const existingUser = await User.findOne({ where: { email } });
-    if (!existingUser) {
-      return res.status(404).json({
-        error: "User not found",
-        message: "The provided email does not exist. Please register first.",
-      });
-    }
 
-    const comparePassword = bcrypt.compareSync(password, existingUser.password);
+    try {
+      const checkUser = await User.findOne({ where: { email: email } });
 
-    if (!comparePassword) {
-      resolve({
-        status: "ERR",
-        message: "Mật khẩu hoặc tài khoản không đúng",
-      });
-    } else {
-      const access_token = await genneralAccessToken({
-        id: existingUser.id,
-        isAdmin: existingUser.isAdmin,
-      });
-      const refresh_token = await genneralRefreshToken({
-        id: existingUser.id,
-        isAdmin: existingUser.isAdmin,
-      });
-      return res.status(200)({
-        status: "OK",
-        message: "Thành công",
-        access_token,
-        refresh_token,
-      });
+      if (checkUser === null) {
+        resolve({
+          status: "ERR",
+          message: "User không tồn tại",
+        });
+      }
+
+      const comparePassword = bcrypt.compareSync(password, checkUser.password);
+
+      if (!comparePassword) {
+        resolve({
+          status: "ERR",
+          message: "Mật khẩu hoặc tài khoản không đúng",
+        });
+      } else {
+        const access_token = await genneralAccessToken({
+          id: checkUser.id,
+          isAdmin: checkUser.isAdmin,
+        });
+
+        const refresh_token = await genneralRefreshToken({
+          id: checkUser.id,
+          isAdmin: checkUser.isAdmin,
+        });
+        resolve({
+          status: "OK",
+          message: "Thành công",
+          access_token,
+          refresh_token,
+        });
+      }
+    } catch (e) {
+      reject(e);
     }
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+  });
 };
-
 
 const getallUsers = async (req, res) => {
   try {
@@ -219,7 +222,6 @@ const getuserById = async (id, req, res) => {
     throw error;
   }
 };
-
 
 export {
   createuser,

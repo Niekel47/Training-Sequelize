@@ -4,7 +4,7 @@ import {
   updateuser,
   deleteuser,
   getuserById,
-  loginuser
+  loginuser,
 } from "../services/userService.js";
 
 const createUser = async (req, res) => {
@@ -15,6 +15,32 @@ const createUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+const loginUser = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { email, password } = req.body;
+    const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const isCheckEmail = reg.test(email);
+    if (!email || !password) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "Yêu cầu điền hết thông tin!",
+      });
+    } else if (!isCheckEmail) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "Yêu cầu điền email",
+      });
+    }
+    const newResponse = await loginuser(req.body);
+    return res.status(200).json(newResponse);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
   }
 };
 
@@ -64,32 +90,6 @@ const getUserById = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const userLogin = { email, password };
-    const result = await loginuser(userLogin);
-
-    if (result.status === "OK") {
-      res.status(200).json({
-        message: "Login successful",
-        access_token: result.access_token,
-        refresh_token: result.refresh_token,
-      });
-    } else {
-      res.status(401).json({
-        error: "Authentication failed",
-        message: result.message,
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: error,
-      message: "Da xay ra loi khi yeu cau",
-    });
-  }
-};
 
 
 export {
