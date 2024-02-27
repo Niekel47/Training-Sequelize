@@ -6,24 +6,16 @@ const createuser = async (newUser) => {
   try {
     // Lấy thông tin từ yêu cầu của người dùng
     const { fullname, email, password, phone } = newUser;
-    // Kiểm tra xem người dùng đã cung cấp tên người dùng, email và mật khẩu chưa
-    if (!fullname || !email || !password || !phone) {
-      throw new Error(
-        "Vui lòng cung cấp đầy đủ thông tin tên người dùng, email và mật khẩu."
-      );
-    }
-    if (!validator.isEmail(email)) {
-      throw new Error("Vui lòng cung cấp địa chỉ email hợp lệ.");
-    }
-
     if (phone.length < 10 || phone.length > 11) {
       throw new Error("Số điện thoại phải có từ 10 đến 11 ký tự.");
     }
-
     // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      throw new Error("Email đã tồn tại. Vui lòng chọn email khác.");
+      return {
+        status: "Err",
+        message: "Email đã tồn tại!",
+      };
     }
 
     if (password.length < 6) {

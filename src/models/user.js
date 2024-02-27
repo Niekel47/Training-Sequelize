@@ -13,16 +13,6 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: {
-          msg: "Vui lòng nhập đúng định dạng email",
-        },
-        async customValidator(value) {
-          if (!validator.isEmail(value)) {
-            throw new Error("Email không hợp lệ");
-          }
-        },
-      },
     },
     password: {
       type: DataTypes.STRING,

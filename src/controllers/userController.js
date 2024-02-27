@@ -10,6 +10,19 @@ import {
 const createUser = async (req, res) => {
   try {
     const { fullname, email, password, phone } = req.body;
+    const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const isCheckEmail = reg.test(email);
+    if (!fullname || !email || !password || !phone) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "Yêu cầu điền hết thông tin!",
+      });
+    } else if (!isCheckEmail) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "Yêu cầu điền đúng định dạng email",
+      });
+    }
     const user = await createuser(req.body);
     res.status(200).json(user);
   } catch (error) {
@@ -89,8 +102,6 @@ const getUserById = async (req, res) => {
     throw error;
   }
 };
-
-
 
 export {
   createUser,
