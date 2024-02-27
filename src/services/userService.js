@@ -215,6 +215,8 @@ const getuserById = async (id, req, res) => {
   }
 };
 
+
+
 export {
   createuser,
   getallUsers,
@@ -222,4 +224,5 @@ export {
   deleteuser,
   getuserById,
   loginuser,
+  
 };
