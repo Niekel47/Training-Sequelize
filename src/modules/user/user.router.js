@@ -6,19 +6,13 @@ import {
   updateUser,
   deleteUser,
   getUserById,
-  loginUser,
+} from "./user.controller.js";
 
-  // logoutUser,
-} from "../controllers/UserController.js";
-import { authMiddleWare } from "../middleware/authMiddleware.js";
-
+//User
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
-router.post("/login", loginUser);
-
-// router.post("/logout", logoutUser);
 
 export default router;

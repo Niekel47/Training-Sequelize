@@ -1,13 +1,15 @@
 import express from "express";
 import sequelize from "./src/config/db.js";
 import { config } from "dotenv";
-import route from "./src/routers/index.js";
+import route from "./src/modules/user/user.index.js";
+import authroute from "./src/modules/auth/auth.index.js"
 
 config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", route);
+app.use("/api", authroute)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

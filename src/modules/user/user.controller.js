@@ -4,8 +4,7 @@ import {
   updateuser,
   deleteuser,
   getuserById,
-  loginuser,
-} from "../services/userService.js";
+} from "./user.service.js";
 
 const createUser = async (req, res) => {
   try {
@@ -31,31 +30,6 @@ const createUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  try {
-    console.log(req.body);
-    const { email, password } = req.body;
-    const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-    const isCheckEmail = reg.test(email);
-    if (!email || !password) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "Yêu cầu điền hết thông tin!",
-      });
-    } else if (!isCheckEmail) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "Yêu cầu điền email",
-      });
-    }
-    const newResponse = await loginuser(req.body);
-    return res.status(200).json(newResponse);
-  } catch (e) {
-    return res.status(404).json({
-      message: e,
-    });
-  }
-};
 
 // const logoutUser = async (req, res) => {
 //   try {
@@ -117,14 +91,11 @@ const getUserById = async (req, res) => {
   }
 };
 
-
-
 export {
   createUser,
   getAllUsers,
   updateUser,
   deleteUser,
   getUserById,
-  loginUser,
   // logoutUser,
 };
