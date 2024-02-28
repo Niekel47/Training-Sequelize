@@ -34,7 +34,6 @@ const genneralRefreshToken = async (payload) => {
 //             message: "The authemtication",
 //           });
 //         }
-//         //trong video:
 //         const access_token = await genneralAccessToken({
 //           id: user?.id,
 //           isAdmin: user?.isAdmin,

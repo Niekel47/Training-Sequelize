@@ -1,6 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import validator from "validator";
 
 const User = sequelize.define(
   "Users",
@@ -27,20 +26,10 @@ const User = sequelize.define(
         len: [10, 11], // Số điện thoại phải có từ 10 đến 11 ký tự
       },
     },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-    },
   },
   {
     tableName: "User",
-    timestamps: false,
+    timestamps: true,
   }
 );
 export default User;
