@@ -49,7 +49,7 @@ const createproduct = async (productData) => {
 
 const getallproducts = async (req, res) => {
   try {
-    const { page, limit = 3, sort, search } = req.query;
+    const { page, limit = 5, sort, search } = req.query;
     // Tùy chỉnh truy vấn dựa trên các tham số được truyền vào từ client
     const options = {
       order: [],
@@ -80,11 +80,11 @@ const getallproducts = async (req, res) => {
     const totalProducts = await Product.count(options.where);
     const totalPages = Math.ceil(totalProducts / limit);
     // Thực hiện truy vấn để lấy danh sách người dùng với các tùy chọn đã được đặt
-    const Products = await Product.findAll(options);
+    const products = await Product.findAll(options);
     return {
       totalProducts,
       totalPages,
-      Products,
+      products,
     };
   } catch (error) {
     console.log(error);

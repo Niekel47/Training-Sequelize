@@ -90,7 +90,7 @@ const getProductById = async (req, res) => {
     const { id } = req.params;
     const product = await getproductById(id);
     if (!product) {
-      return res.status(500).json({ error: "Người dùng không tồn tại." });
+      return res.status(500).json({ error: "Sản phẩm không tồn tại." });
     }
     res.status(200).json({ data: product });
   } catch (error) {
