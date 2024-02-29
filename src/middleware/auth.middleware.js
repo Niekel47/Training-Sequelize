@@ -8,7 +8,7 @@ const genneralAccessToken = async (payload) => {
       payload,
     },
     process.env.ACCESS_TOKEN,
-    { expiresIn: "1h" }
+    { expiresIn: process.env.JWT_ACCESS_TOKEN_expiresIn }
   );
   return access_token;
 };
@@ -19,7 +19,7 @@ const genneralRefreshToken = async (payload) => {
       payload,
     },
     process.env.REFRESH_TOKEN,
-    { expiresIn: "365d" }
+    { expiresIn: process.env.JWT_REFRESH_TOKEN_expiresIn }
   );
   return refresh_token;
 };
