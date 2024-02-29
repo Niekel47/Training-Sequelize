@@ -1,7 +1,7 @@
 import Product from "../../models/product.js";
 
 export default class ProductService {
-  async createproduct(productData) {
+  static async createproduct(productData) {
     try {
       const {
         name,
@@ -48,7 +48,7 @@ export default class ProductService {
     }
   }
 
-  async getAllproducts(req, res) {
+  static async getAllproducts(req, res) {
     try {
       const { page, limit = 5, sort, search } = req.query;
       // Tùy chỉnh truy vấn dựa trên các tham số được truyền vào từ client
@@ -93,7 +93,7 @@ export default class ProductService {
     }
   }
 
-  async updateproduct(id, data) {
+  static async updateproduct(id, data) {
     try {
       const checkProduct = await Product.findByPk(id);
       if (checkProduct == null) {
@@ -116,7 +116,7 @@ export default class ProductService {
     }
   }
 
-  async deleteproduct(id, req, res) {
+  static async deleteproduct(id, req, res) {
     try {
       const existingProduct = await Product.findByPk(id);
       if (!existingProduct) {
@@ -132,7 +132,7 @@ export default class ProductService {
     }
   }
 
-  async getproductById(id, req, res) {
+  static async getproductById(id, req, res) {
     try {
       // Tìm người dùng trong cơ sở dữ liệu với id được cung cấp
       const product = await Product.findByPk(id);

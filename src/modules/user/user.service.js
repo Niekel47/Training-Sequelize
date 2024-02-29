@@ -123,14 +123,4 @@ export default class UserService {
     }
   }
 
-  static async getUserById(id, req, res) {
-    try {
-      // Tìm người dùng trong cơ sở dữ liệu với id được cung cấp
-      const user = await User.findByPk(id);
-      return user;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
 }

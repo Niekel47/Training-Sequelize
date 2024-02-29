@@ -6,12 +6,9 @@ import {
 import User from "../../models/user.js";
 
 export default class AuthService {
-  static async createuser(newUser) {
+  static createuser = async (newUser) => {
     try {
       const { fullname, email, password, phone } = newUser;
-      if (phone.length < 10 || phone.length > 11) {
-        throw new Error("Số điện thoại phải có từ 10 đến 11 ký tự.");
-      }
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         return {
@@ -19,10 +16,7 @@ export default class AuthService {
           message: "Email đã tồn tại!",
         };
       }
-      if (password.length < 6) {
-        throw new Error("Mật khẩu phải có ít nhất 6 ký tự.");
-      }
-      const hashedPassword = await bcrypt.hashSync(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const post = await User.create({
         fullname: fullname,
         email: email,
@@ -38,9 +32,9 @@ export default class AuthService {
       console.error(error);
       throw error;
     }
-  }
+  };
 
-  static async loginuser(userLogin) {
+  static loginuser = async (userLogin) => {
     try {
       const { email, password } = userLogin;
       const checkUser = await User.findOne({ where: { email: email } });
@@ -50,31 +44,90 @@ export default class AuthService {
           message: "User không tồn tại",
         };
       }
-      const comparePassword = bcrypt.compareSync(password, checkUser.password);
+      const comparePassword = bcrypt.compare(password, checkUser.password);
       if (!comparePassword) {
         return {
           status: "ERR",
           message: "Mật khẩu hoặc tài khoản không đúng",
         };
-      } else {
-        const access_token = await genneralAccessToken({
-          id: checkUser.id,
-          isAdmin: checkUser.isAdmin,
-        });
-        const refresh_token = await genneralRefreshToken({
-          id: checkUser.id,
-          isAdmin: checkUser.isAdmin,
-        });
+      }
+      const access_token = await genneralAccessToken({
+        id: checkUser.id,
+        isAdmin: checkUser.isAdmin,
+      });
+      const refresh_token = await genneralRefreshToken({
+        id: checkUser.id,
+        isAdmin: checkUser.isAdmin,
+      });
+      return {
+        status: "OK",
+        message: "Thành công",
+        access_token,
+        refresh_token,
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  static async profile(id) {
+    try {
+      // Tìm người dùng trong cơ sở dữ liệu với id được cung cấp
+      const user = await User.findByPk(id);
+      if (!user) {
         return {
-          status: "OK",
-          message: "Thành công",
-          access_token,
-          refresh_token,
+          status: 500,
+          message: "Nguoi dung khong ton tai",
         };
       }
+      return user;
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
+
+  static async updateprofile(id, newprofile) {
+    try {
+      // Tìm người dùng trong cơ sở dữ liệu với id được cung cấp
+      const { fullname, email, phone } = newprofile;
+      const user = await User.findByPk(id);
+      if (!user) {
+        return {
+          status: 500,
+          message: "Nguoi dung khong ton tai",
+        };
+      }
+      return await user.update(newprofile);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  static async updatePassword(id, oldPassword, new_password) {
+    try {
+      // Tìm người dùng trong cơ sở dữ liệu
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new Error("Người dùng không tồn tại");
+      }
+      const isValidOldPassword = await bcrypt.compare(
+        oldPassword,
+        user.password
+      );
+      if (!isValidOldPassword) {
+        throw new Error("Mật khẩu cũ không đúng");
+      }
+      if (oldPassword === new_password) {
+        throw new Error("Vui lòng nhập mật khẩu mới khác mật khẩu cũ");
+      }
+      const hashedPassword = await bcrypt.hash(new_password, 10);
+      await user.update({ password: hashedPassword });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
 }

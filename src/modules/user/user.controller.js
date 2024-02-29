@@ -1,4 +1,5 @@
 import UserService from "./user.service.js";
+import { ListQueryReq } from "../../function/req.query.js";
 
 export default class UserController {
   static async getAllUsers(req, res) {
@@ -32,20 +33,4 @@ export default class UserController {
       throw error;
     }
   }
-
-  static async getUserById(req, res) {
-    try {
-      const { id } = req.params;
-      const user = await UserService.getUserById(id, req, res);
-      if (!user) {
-        return res.status(500).json({ error: "Người dùng không tồn tại." });
-      }
-      res.status(200).json({ data: user });
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
 }
-
-
