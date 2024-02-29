@@ -1,29 +1,60 @@
-import { loginuser } from "./auth.service.js";
+import AuthService from "./auth.service.js";
 
-const loginUser = async (req, res) => {
-  try {
-    console.log(req.body);
-    const { email, password } = req.body;
-    const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-    const isCheckEmail = reg.test(email);
-    if (!email || !password) {
+export default class AuthController {
+  static async createUser(req, res) {
+    try {
+      const { fullname, email, password, phone } = req.body;
+      const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+      const isCheckEmail = reg.test(email);
+      if (!fullname || !email || !password || !phone) {
+        return res.status(200).json({
+          status: "ERR",
+          message: "Yêu cầu điền hết thông tin!",
+        });
+      } else if (!isCheckEmail) {
+        return res.status(500).json({
+          status: "ERR",
+          message: "Yêu cầu điền đúng định dạng email",
+        });
+      }
+      const user = await AuthService.createuser(req.body);
       return res.status(200).json({
-        status: "ERR",
-        message: "Yêu cầu điền hết thông tin!",
+        data: { user },
       });
-    } else if (!isCheckEmail) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "Yêu cầu điền email",
-      });
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    const newResponse = await loginuser(req.body);
-    return res.status(200).json(newResponse);
-  } catch (e) {
-    return res.status(404).json({
-      message: e,
-    });
   }
-};
 
-export  {loginUser};
+  static async loginUser(req, res) {
+    try {
+      console.log(req.body);
+      const { email, password } = req.body;
+      const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+      const isCheckEmail = reg.test(email);
+      if (!email || !password) {
+        return res.status(200).json({
+          status: "ERR",
+          message: "Yêu cầu điền hết thông tin!",
+        });
+      } else if (!isCheckEmail) {
+        return res.status(200).json({
+          status: "ERR",
+          message: "Yêu cầu điền email",
+        });
+      }
+      const login = await AuthService.loginuser(req.body);
+      return {
+        status: 200,
+        message: "Thanh cong",
+        data: { login },
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
+
