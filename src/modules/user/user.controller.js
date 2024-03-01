@@ -33,4 +33,26 @@ export default class UserController {
       throw error;
     }
   }
+
+  static async deleteManyUsers(req, res) {
+    try {
+      const { ids } = req.body; // Lấy danh sách các id cần xóa từ request body
+      if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({
+          error: "Danh sách id không hợp lệ.",
+        });
+      }
+
+      // Gọi service để xóa các người dùng
+      const destroyCount = await UserService.deleteManyUsers(ids);
+
+      // Trả về số lượng bản ghi đã được xóa
+      res.status(200).json({
+        message: `${destroyCount} người dùng đã được xóa thành công.`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
 }

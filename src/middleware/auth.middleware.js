@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 config();
 
-const genneralAccessToken = async (payload) => {
+export const genneralAccessToken = async (payload) => {
   const access_token = jwt.sign(
     {
       payload,
@@ -13,7 +13,7 @@ const genneralAccessToken = async (payload) => {
   return access_token;
 };
 
-const genneralRefreshToken = async (payload) => {
+export const genneralRefreshToken = async (payload) => {
   const refresh_token = jwt.sign(
     {
       payload,
@@ -23,6 +23,31 @@ const genneralRefreshToken = async (payload) => {
   );
   return refresh_token;
 };
+
+export const AccessTokenGuard = (permissions = []) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.auth) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      // Check permission
+      if (permissions) {
+        const permissionData = req.auth.permissions || [];
+        const access = permissions.every((p) => {
+          return permissionData.includes(p);
+        });
+        if (!access) {
+          return res.status(403).json({ error: "You can not access this API" });
+        }
+      }
+      next();
+    } catch (e) {
+      next(e);
+    }
+  };
+};
+
 
 // const refreshTokenJwtService = (token) => {
 //   return new Promise((resolve, reject) => {
@@ -49,9 +74,3 @@ const genneralRefreshToken = async (payload) => {
 //     }
 //   });
 // };
-
-export {
-  genneralAccessToken,
-  genneralRefreshToken,
-  //   refreshTokenJwtService,
-};

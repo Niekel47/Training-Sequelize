@@ -3,7 +3,7 @@ import AuthService from "./auth.service.js";
 export default class AuthController {
   static createUser = async (req, res) => {
     try {
-      const { fullname, email, password, phone } = req.body;
+      const { fullname, email, password, phone, isAdmin } = req.body;
       // const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
       // const isCheckEmail = reg.test(email);
       // if (!fullname || !email || !password || !phone) {

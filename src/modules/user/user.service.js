@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 export default class UserService {
   static async getAllUsers(req, res) {
     try {
-      const { page = 1, limit = 3, sort, search } = req.query;
+      const { page, limit = 3, sort, search } = req.query;
       // Tùy chỉnh truy vấn dựa trên các tham số được truyền vào từ client
       const options = {
         order: [],
@@ -123,4 +123,13 @@ export default class UserService {
     }
   }
 
+  static async deleteManyUsers(ids) {
+    try {
+      const destroy = await User.destroy({ where: { id: ids } });
+      return destroy;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

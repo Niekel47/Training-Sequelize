@@ -18,6 +18,14 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
     },
+    isAdmin: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0, // Mặc định là user
+      validate: {
+        isIn: [[0, 1]], // Giá trị phải là 0 hoặc 1
+      },
+    },
     phone: {
       type: DataTypes.STRING(12),
       allowNull: false,
