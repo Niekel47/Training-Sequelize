@@ -2,7 +2,13 @@ import express from "express";
 import sequelize from "./src/config/db.js";
 import { config } from "dotenv";
 import routes from "./src/routes/index.js";
-import { errorHandler, responseSuccess } from "./src/middleware/respone.middlware.js";
+import {
+  errorHandler,
+  responseSuccess,
+} from "./src/middleware/respone.middlware.js";
+import association from "./src/models/association.js";
+
+
 
 config();
 const app = express();
@@ -19,6 +25,8 @@ const startServer = async () => {
     // await db.sequelize.sync({alter: process.env.DB_ALTER !== 'false'});
     await sequelize.authenticate();
     console.log("✅ Database connected!");
+    //  association.defineRelationships();
+    // console.log("✅ Database association!");
     await sequelize.sync({ alter: process.env.DB_ALTER !== "false" });
     console.log("✅ Database sync!");
     const port = process.env.PORT || 3001;
