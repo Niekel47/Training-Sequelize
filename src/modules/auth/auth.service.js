@@ -3,12 +3,12 @@ import {
   genneralAccessToken,
   genneralRefreshToken,
 } from "../../middleware/auth.middleware.js";
-import User from "../../models/user.js";
+import User from "../../models/user.model.js";
 
 export default class AuthService {
   static createuser = async (newUser) => {
     try {
-      const { fullname, email, password, phone } = newUser;
+      const { fullname, email, password, phone, address, role, status } = newUser;
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         return {
@@ -22,6 +22,9 @@ export default class AuthService {
         email: email,
         password: hashedPassword,
         phone: phone,
+        address:address,
+        role:role,
+        status:status,
       });
       return {
         status: 200,

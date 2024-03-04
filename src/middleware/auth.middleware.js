@@ -24,29 +24,29 @@ export const genneralRefreshToken = async (payload) => {
   return refresh_token;
 };
 
-export const AccessTokenGuard = (permissions = []) => {
-  return async (req, res, next) => {
-    try {
-      if (!req.auth) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+// export const AccessTokenGuard = (permissions = []) => {
+//   return async (req, res, next) => {
+//     try {
+//       if (!req.auth) {
+//         return res.status(401).json({ error: "Unauthorized" });
+//       }
 
-      // Check permission
-      if (permissions) {
-        const permissionData = req.auth.permissions || [];
-        const access = permissions.every((p) => {
-          return permissionData.includes(p);
-        });
-        if (!access) {
-          return res.status(403).json({ error: "You can not access this API" });
-        }
-      }
-      next();
-    } catch (e) {
-      next(e);
-    }
-  };
-};
+//       // Check permission
+//       if (permissions) {
+//         const permissionData = req.auth.permissions || [];
+//         const access = permissions.every((p) => {
+//           return permissionData.includes(p);
+//         });
+//         if (!access) {
+//           return res.status(403).json({ error: "You can not access this API" });
+//         }
+//       }
+//       next();
+//     } catch (e) {
+//       next(e);
+//     }
+//   };
+// };
 
 
 // const refreshTokenJwtService = (token) => {

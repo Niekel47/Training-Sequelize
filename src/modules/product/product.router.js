@@ -8,5 +8,6 @@ router.get("/:id", ProductController.getProductById);
 router.post("/", ProductController.createProduct);
 router.put("/:id", ProductController.updateProduct);
 router.delete("/:id", ProductController.deleteProduct);
+router.post("/delete-many", ProductController.deleteManyProduct);
 
 export default router;

@@ -1,4 +1,4 @@
-import Product from "../../models/product.js";
+import Product from "../../models/product.model.js";
 
 export default class ProductService {
   static async createproduct(productData) {
@@ -6,13 +6,10 @@ export default class ProductService {
       const {
         name,
         image,
-        type,
         price,
-        countInStock,
-        rating,
+        quantity,
         description,
-        discount,
-        sold,
+        status
       } = productData;
       const checkProduct = await Product.findOne({
         where: { name: name },
@@ -25,15 +22,12 @@ export default class ProductService {
         };
       }
       const newProduct = await Product.create({
-        name,
-        image,
-        type,
-        price,
-        countInStock,
-        rating,
-        description,
-        discount,
-        sold,
+        name:name,
+        image:image,
+        price:price,
+        quantity:quantity,
+        description:description,
+        status:status,
       });
       if (newProduct) {
         return {
@@ -139,6 +133,16 @@ export default class ProductService {
       return product;
     } catch (error) {
       console.error(error);
+      throw error;
+    }
+  }
+
+  static async deleteManyProduct(ids) {
+    try {
+      const destroy = await Product.destroy({ where: { id: ids } });
+      return destroy;
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
