@@ -8,7 +8,8 @@ import User from "../../models/user.model.js";
 export default class AuthService {
   static createuser = async (newUser) => {
     try {
-      const { fullname, email, password, phone, address, role, status } = newUser;
+      const { fullname, email, password, phone, address, role, status } =
+        newUser;
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         return {
@@ -22,9 +23,9 @@ export default class AuthService {
         email: email,
         password: hashedPassword,
         phone: phone,
-        address:address,
-        role:role,
-        status:status,
+        address: address,
+        role: role,
+        status: status,
       });
       return {
         status: 200,
@@ -56,11 +57,9 @@ export default class AuthService {
       }
       const access_token = await genneralAccessToken({
         id: checkUser.id,
-        isAdmin: checkUser.isAdmin,
       });
       const refresh_token = await genneralRefreshToken({
         id: checkUser.id,
-        isAdmin: checkUser.isAdmin,
       });
       return {
         status: "OK",
@@ -68,6 +67,7 @@ export default class AuthService {
         access_token,
         refresh_token,
       };
+      
     } catch (error) {
       console.error(error);
       throw error;

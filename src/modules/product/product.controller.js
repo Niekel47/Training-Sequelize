@@ -3,15 +3,46 @@ import ProductService from "./product.service.js";
 export default class ProductController {
   static async createProduct(req, res) {
     try {
-      const { name, image, price, quantity, description, status } = req.body;
-      if (!name || !image || !price || !description || !status || !quantity) {
+      const {
+        name,
+        image,
+        price,
+        quantity,
+        description,
+        status,
+        author_id,
+        publisher_id,
+        category_id,
+      } = req.body;
+      if (
+        !name ||
+        !image ||
+        !price ||
+        !description ||
+        !status ||
+        !quantity ||
+        !author_id ||
+        !publisher_id ||
+        !category_id
+      ) {
         return res.status(200).json({
           status: "ERR",
           message: "Yêu cầu điền hết thông tin!",
         });
       }
+      const imagePath = "/images/products/" + image;
 
-      const response = await ProductService.createproduct(req.body);
+       const response = await ProductService.createproduct({
+         name,
+         image: imagePath, // Sử dụng imagePath để lưu trữ đường dẫn hình ảnh
+         price,
+         quantity,
+         description,
+         status,
+         author_id,
+         publisher_id,
+         category_id,
+       });
       return res.status(200).json(response);
     } catch (e) {
       return res.status(404).json({

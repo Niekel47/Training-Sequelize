@@ -1,6 +1,7 @@
 import { Router } from "express";
 import AuthController from "./auth.controller.js";
 import validationHandler from "../../middleware/validator.middleware.js";
+import { checkPermission } from "../../middleware/auth.middleware.js";
 import {
   AuthLoginInput,
   AuthRegisterInput,
@@ -12,6 +13,7 @@ const router = Router();
 router.post(
   "/login",
   validationHandler(AuthLoginInput),
+  // checkPermission,
   AuthController.loginUser
 );
 router.post(

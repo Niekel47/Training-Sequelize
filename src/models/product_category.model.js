@@ -1,27 +1,27 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Book_Category = sequelize.define(
-  "Book_Category",
+const Product_Category = sequelize.define(
+  "Product_Category",
   {
     id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
     product_id: {
-      type: Sequelize.UUID,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     category_id: {
-      type: Sequelize.UUID,
+      type: DataTypes.UUID,
       allowNull: false,
     },
   },
   {
-    tableName: "Book_Category",
+    tableName: "Product_Category",
     timestamps: true,
   }
 );
-export default Book_Category;
+export default Product_Category;

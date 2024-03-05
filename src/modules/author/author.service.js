@@ -56,11 +56,11 @@ export default class AuthorService {
         };
       }
       const totalAuthor = await Author.count(options.where);
-      const totalPages = Math.ceil(totalCat / limit);
+      const totalPages = Math.ceil(totalAuthor / limit);
       // Thực hiện truy vấn để lấy danh sách người dùng với các tùy chọn đã được đặt
       const getallAuthor = await Author.findAll(options);
       return {
-        Author,
+        totalAuthor,
         totalPages,
         getallAuthor,
       };

@@ -4,24 +4,33 @@ import sequelize from "../config/db.js";
 const User = sequelize.define(
   "Users",
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
+    },
     fullname: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       unique: true,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     address: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role_id: DataTypes.UUID,
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     phone: {
       type: DataTypes.STRING(12),
       allowNull: false,

@@ -12,6 +12,7 @@ export default class PublisherService {
         };
       }
       const post = await Publisher.create({
+       
         name: name,
       });
       return {

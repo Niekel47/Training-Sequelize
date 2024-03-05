@@ -4,6 +4,9 @@ export default class ProductService {
   static async createproduct(productData) {
     try {
       const {
+        author_id,
+        publisher_id,
+        category_id,
         name,
         image,
         price,
@@ -22,12 +25,15 @@ export default class ProductService {
         };
       }
       const newProduct = await Product.create({
-        name:name,
-        image:image,
-        price:price,
-        quantity:quantity,
-        description:description,
-        status:status,
+        author_id:author_id,
+        publisher_id:publisher_id,
+        category_id:category_id,
+        name: name,
+        image: image,
+        price: price,
+        quantity: quantity,
+        description: description,
+        status: status,
       });
       if (newProduct) {
         return {

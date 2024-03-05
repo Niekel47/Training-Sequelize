@@ -16,6 +16,7 @@ export default class AuthController {
     try {
       const login = await AuthService.loginuser(req.body);
       return res.status(200).json(login);
+      
     } catch (error) {
       console.error(error);
       throw error;
