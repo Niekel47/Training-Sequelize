@@ -40,8 +40,11 @@ export default class AuthService {
 
   static loginuser = async (userLogin) => {
     try {
+
+
       const { email, password } = userLogin;
       const checkUser = await User.findOne({ where: { email: email } });
+      
       if (!checkUser) {
         return {
           status: "ERR",

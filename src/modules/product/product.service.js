@@ -1,5 +1,6 @@
 import Product from "../../models/product.model.js";
 
+
 export default class ProductService {
   static async createproduct(productData) {
     try {
@@ -8,12 +9,13 @@ export default class ProductService {
         publisher_id,
         category_id,
         name,
-        image,
         price,
+        image,
         quantity,
         description,
-        status
+        status,
       } = productData;
+
       const checkProduct = await Product.findOne({
         where: { name: name },
       });
@@ -25,9 +27,9 @@ export default class ProductService {
         };
       }
       const newProduct = await Product.create({
-        author_id:author_id,
-        publisher_id:publisher_id,
-        category_id:category_id,
+        author_id: author_id,
+        publisher_id: publisher_id,
+        category_id: category_id,
         name: name,
         image: image,
         price: price,

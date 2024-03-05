@@ -13,7 +13,6 @@ const router = Router();
 router.post(
   "/login",
   validationHandler(AuthLoginInput),
-  // checkPermission,
   AuthController.loginUser
 );
 router.post(
