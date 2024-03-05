@@ -33,7 +33,7 @@ export default class ProductController {
       }
 
       // Tạo đường dẫn đầy đủ của hình ảnh
-      const imagePath = "src/public/static/images/products/" + image;
+      const imagePath = "public/images/" + image;
 
       const response = await ProductService.createproduct({
         name,

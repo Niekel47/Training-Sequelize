@@ -15,8 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(responseSuccess);
 app.use(express.urlencoded({ extended: true }));
-const __dirname = path.resolve();
-app.use("/static", express.static(path.join(__dirname, "public")));
+// const __dirname = path.resolve();
+app.use(express.static("./public"));
 app.use("/api", routes);
 app.use(errorHandler);
 app.get("/", (req, res) => {
