@@ -1,5 +1,6 @@
 import ProductService from "./product.service.js";
-import { uploadImage } from "../upload/upload.service.js";
+import Author from "../../models/author.model.js";
+
 
 export default class ProductController {
   static async createProduct(req, res) {
@@ -11,10 +12,13 @@ export default class ProductController {
         quantity,
         description,
         status,
-        author_id,
-        publisher_id,
-        category_id,
+        AuthorId,
+        PublisherId,
+        CategoryId,
       } = req.body;
+
+      
+
       if (
         !name ||
         !image ||
@@ -22,11 +26,11 @@ export default class ProductController {
         !description ||
         !status ||
         !quantity ||
-        !author_id ||
-        !publisher_id ||
-        !category_id
+        !AuthorId ||
+        !PublisherId ||
+        !CategoryId // Kiểm tra xem mảng categoryIds có ít nhất một phần tử không
       ) {
-        return res.status(200).json({
+        return res.status(400).json({
           status: "ERR",
           message: "Yêu cầu điền hết thông tin!",
         });
@@ -34,6 +38,8 @@ export default class ProductController {
 
       // Tạo đường dẫn đầy đủ của hình ảnh
       const imagePath = "public/images/" + image;
+      // Kiểm tra tính hợp lệ của UUID và lọc ra các UUID hợp lệ
+      
 
       const response = await ProductService.createproduct({
         name,
@@ -42,14 +48,16 @@ export default class ProductController {
         quantity,
         description,
         status,
-        author_id,
-        publisher_id,
-        category_id,
+        AuthorId,
+        PublisherId,
+        CategoryId, // Sử dụng categoryIds thay vì CategoryId
       });
+
       return res.status(200).json(response);
     } catch (e) {
-      return res.status(404).json({
-        message: e,
+      return res.status(500).json({
+        status: "ERR",
+        message: e.message || "Đã xảy ra lỗi trong quá trình xử lý",
       });
     }
   }

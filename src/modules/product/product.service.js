@@ -1,13 +1,18 @@
 import Product from "../../models/product.model.js";
+import Author from "../../models/author.model.js";
+import Publisher from "../../models/publisher.model.js";
+import Category from "../../models/category.model.js";
+import Product_Category from "../../models/product_category.model.js";
 
+// Thiết lập mối quan hệ khi ứng dụng bắt đầu chạy
 
 export default class ProductService {
   static async createproduct(productData) {
     try {
       const {
-        author_id,
-        publisher_id,
-        category_id,
+        AuthorId,
+        PublisherId,
+        CategoryId,
         name,
         price,
         image,
@@ -16,20 +21,22 @@ export default class ProductService {
         status,
       } = productData;
 
+      // Kiểm tra xem sản phẩm đã tồn tại chưa
       const checkProduct = await Product.findOne({
         where: { name: name },
       });
-      console.log("checkProduct", checkProduct);
       if (checkProduct !== null) {
         return {
-          status: "OK",
+          status: "ERR",
           message: "Tên của sản phẩm đã tồn tại",
         };
       }
+
+      // Tạo sản phẩm mới
       const newProduct = await Product.create({
-        author_id: author_id,
-        publisher_id: publisher_id,
-        category_id: category_id,
+        AuthorId: AuthorId,
+        PublisherId: PublisherId,
+        CategoryId: CategoryId,
         name: name,
         image: image,
         price: price,
@@ -37,13 +44,15 @@ export default class ProductService {
         description: description,
         status: status,
       });
-      if (newProduct) {
-        return {
-          status: "OK",
-          message: "SUCCESS",
-          data: newProduct,
-        };
-      }
+
+      await Product_Category.create({
+        ProductId: newProduct.id,
+        CategoryId: CategoryId,
+      });
+
+      return {
+        newProduct,
+      };
     } catch (error) {
       console.error(error);
       throw error;
@@ -57,6 +66,17 @@ export default class ProductService {
       const options = {
         order: [],
         where: {},
+        include: [
+          { model: Author, attributes: ["name"] },
+          { model: Publisher, attributes: ["name"] },
+          {
+            model: Category,
+            through: {
+              attributes: [], // Loại bỏ tất cả các thuộc tính từ bảng trung gian
+            },
+            attributes: ["name"],
+          },
+        ],
       };
       // Xử lý phần trang
       if (page && limit) {

@@ -6,12 +6,12 @@ import {
 import User from "../../models/user.model.js";
 
 export default class AuthService {
-  static createuser = async (newUser) => {
+  static createuser = async (newuser) => {
     try {
       const { fullname, email, password, phone, address, role, status } =
-        newUser;
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) {
+        newuser;
+      const existinguser = await User.findOne({ where: { email } });
+      if (existinguser) {
         return {
           status: "Err",
           message: "Email đã tồn tại!",
@@ -43,15 +43,15 @@ export default class AuthService {
 
 
       const { email, password } = userLogin;
-      const checkUser = await User.findOne({ where: { email: email } });
-      
-      if (!checkUser) {
+      const checkuser = await User.findOne({ where: { email: email } });
+
+      if (!checkuser) {
         return {
           status: "ERR",
-          message: "User không tồn tại",
+          message: "user không tồn tại",
         };
       }
-      const comparePassword = bcrypt.compare(password, checkUser.password);
+      const comparePassword = bcrypt.compare(password, checkuser.password);
       if (!comparePassword) {
         return {
           status: "ERR",
@@ -59,10 +59,10 @@ export default class AuthService {
         };
       }
       const access_token = await genneralAccessToken({
-        id: checkUser.id,
+        id: checkuser.id,
       });
       const refresh_token = await genneralRefreshToken({
-        id: checkUser.id,
+        id: checkuser.id,
       });
       return {
         status: "OK",

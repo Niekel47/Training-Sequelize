@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import Product from "./product.model.js";
 
 const Author = sequelize.define(
   "Author",
@@ -20,4 +21,5 @@ const Author = sequelize.define(
     timestamps: true,
   }
 );
+
 export default Author;

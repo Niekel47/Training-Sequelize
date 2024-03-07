@@ -1,27 +1,24 @@
-import { Sequelize, DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
-import Category from "./category.model.js";
+"use strict";
 
-const Product = sequelize.define(
-  "Product",
-
-  {
+/** @type {import('sequelize-cli').Migration} */
+export async function up(queryInterface, Sequelize) {
+  await queryInterface.createTable("Product", {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
     AuthorId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
     },
     PublisherId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
     },
     CategoryId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       references: {
         model: Category,
@@ -34,14 +31,11 @@ const Product = sequelize.define(
     quantity: { type: DataTypes.INTEGER, allowNull: false },
     description: { type: DataTypes.TEXT },
     status: {
-      type: DataTypes.ENUM("active", "inactive"),
+      type: Sequelize.ENUM("active", "inactive"),
       defaultValue: "active",
     },
-  },
-  {
-    tableName: "Product",
-    timestamps: true,
-  }
-);
-
-export default Product;
+  });
+}
+export async function down(queryInterface, Sequelize) {
+  await queryInterface.dropTable("Product");
+}
