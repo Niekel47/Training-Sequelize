@@ -14,6 +14,7 @@ export default class PublisherController {
   static async getAllPublisher(req, res) {
     try {
       const allPublisher = await PublisherService.getAllPublisher(req, res);
+      console.log("res",res)
       res.status(200).json(allPublisher);
     } catch (error) {
       console.log(error);
